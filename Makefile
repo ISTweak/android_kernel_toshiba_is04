@@ -324,7 +324,7 @@ CHECK		= sparse
 CHECKFLAGS     := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
 		  -Wbitwise -Wno-return-void $(CF)
 MODFLAGS	= -DMODULE
-COMMON_OPT_FLAGS = -mfpu=neon -mabi=aapcs-linux
+COMMON_OPT_FLAGS = -fgcse -fforce-addr -ffast-math -fsingle-precision-constant -marm -march=armv7-a -mfpu=neon -fgcse -ftree-vectorize -funswitch-loops -funroll-loops -fipa-cp-clone -pipe
 CFLAGS_MODULE   = $(MODFLAGS) $(COMMON_OPT_FLAGS)
 AFLAGS_MODULE   = $(MODFLAGS) $(COMMON_OPT_FLAGS)
 LDFLAGS_MODULE  = -T $(srctree)/scripts/module-common.lds
@@ -343,6 +343,7 @@ LINUXINCLUDE    := -Iinclude \
 KBUILD_CPPFLAGS := -D__KERNEL__
 
 KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
+		   -Wno-unused-but-set-variable -Wno-uninitialized \
 		   -fno-strict-aliasing -fno-common \
 		   -Werror-implicit-function-declaration \
 		   -Wno-format-security \
@@ -524,7 +525,7 @@ all: vmlinux
 ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
 KBUILD_CFLAGS	+= -Os
 else
-KBUILD_CFLAGS	+= -O3
+KBUILD_CFLAGS	+= -O4
 endif
 
 include $(srctree)/arch/$(SRCARCH)/Makefile

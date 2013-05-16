@@ -2,9 +2,6 @@
 # Makefile for some libs needed in the kernel.
 #
 
-#KBUILD_CFLAGS	:=$(KBUILD_CFLAGS:-msoft-float=-mfloat-abi=softfp -mfpu=neon -funroll-loops -mvectorize-with-neon-quad -ftree-vectorize -ftree-vectorizer-verbose=3)
-KBUILD_CFLAGS	:=$(KBUILD_CFLAGS:-O2=-O3)
-
 ifdef CONFIG_FUNCTION_TRACER
 ORIG_CFLAGS := $(KBUILD_CFLAGS)
 KBUILD_CFLAGS = $(subst -pg,,$(ORIG_CFLAGS))
@@ -70,8 +67,10 @@ obj-$(CONFIG_LZO_COMPRESS) += lzo/
 obj-$(CONFIG_LZO_DECOMPRESS) += lzo/
 
 lib-$(CONFIG_DECOMPRESS_GZIP) += decompress_inflate.o
+CFLAGS_REMOVE_decompress_bunzip2.o = -Werror
 lib-$(CONFIG_DECOMPRESS_BZIP2) += decompress_bunzip2.o
 lib-$(CONFIG_DECOMPRESS_LZMA) += decompress_unlzma.o
+lib-$(CONFIG_DECOMPRESS_LZO) += decompress_unlzo.o
 
 obj-$(CONFIG_TEXTSEARCH) += textsearch.o
 obj-$(CONFIG_TEXTSEARCH_KMP) += ts_kmp.o
